@@ -1,5 +1,6 @@
 from pathlib import Path
 
+SEED_SIZE = 2000000
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -16,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'demo.apps.DemoConfig'
 ]
 
 MIDDLEWARE = [
