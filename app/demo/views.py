@@ -41,13 +41,13 @@ def index(request):
 
 def benchmark(request):
     rand_num = randrange(0, SEED_SIZE)
+    
     _ = Product.objects.filter(attributes__name=rand_num).first()
-
     dict_lookup_time = connection.queries[-1]["time"]
 
     _ = Product.objects.filter(attributes__values__contains=[rand_num, rand_num+1]).first()
-
     list_lookup_time = connection.queries[-1]["time"]
+
     return HttpResponse(
         f"dict lookup time: {dict_lookup_time}"
         "<br/>"
