@@ -12,13 +12,17 @@ class Command(BaseCommand):
 
         objs = (
             Product(
-                name=f'P-{i}',
-                attributes={"name": i, "values": [i, i+1]},
-            ) for i in range(SEED_SIZE)
+                name=str(i),
+                name_idx=str(i),
+                attributes={"name": str(i), 'number': i, "values": [i, i+1]},
+                attributes_idx={"name": str(i), 'number': i, "values": [i, i+1]},
+            ) for i in range(1, SEED_SIZE+1)
         )
 
+        print("Seeding started")
         while True:
             batch = list(islice(objs, batch_size))
             if not batch:
                 break
             Product.objects.bulk_create(batch, batch_size)
+        print("Seeding stopped")

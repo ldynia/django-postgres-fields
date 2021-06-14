@@ -1,9 +1,10 @@
 import json
 from random import randrange
 
-from django.shortcuts import render
-from django.http import HttpResponse
 from django.db import connection
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.template.loader import render_to_string
 
 from config.base import SEED_SIZE
 from demo.models import Demo
@@ -18,16 +19,6 @@ def index(request):
     # demo = Demo.objects.create(name='test', arrf_2d=[[1, 2], [3, 4]])
     # demo = Demo.objects.create(name='test', arrf_2d=[[1, 2, 3], [4,5,6]])
 
-    # data = [{
-    #     "age": 76,
-    #     "name": 'Arnold',
-    #     "surname": 'Schwarzenegger',
-    # },{
-    #     "age": 60,
-    #     "name": 'Michael',
-    #     "surname": 'Fox',
-    # }]
-
     # jdata = json.dumps(data)
 
     # print(data)
@@ -40,16 +31,38 @@ def index(request):
 
 
 def benchmark(request):
-    rand_num = randrange(0, SEED_SIZE)
-    
-    _ = Product.objects.filter(attributes__name=rand_num).first()
-    dict_lookup_time = connection.queries[-1]["time"]
+    rand_num = randrange(1, SEED_SIZE+1)
 
-    _ = Product.objects.filter(attributes__values__contains=[rand_num, rand_num+1]).first()
-    list_lookup_time = connection.queries[-1]["time"]
+    db_size = Product.objects.all().count()
 
-    return HttpResponse(
-        f"dict lookup time: {dict_lookup_time}"
-        "<br/>"
-        f"list lookup time: {list_lookup_time}"
-    )
+    # Search for item in name column
+    _ = Product.objects.get(name=rand_num)
+    name_lookup_time = connection.queries[-1]["time"]
+
+    # Search for item in name_idx column
+    _ = Product.objects.get(name_idx=rand_num)
+    name_idx_lookup_time = connection.queries[-1]["time"]
+
+    # Search for item in attributes column
+    _ = Product.objects.get(attributes__name=str(rand_num))
+    attr_name_time = connection.queries[-1]["time"]
+
+    # Search for item in attributes_idx column
+    _ = Product.objects.get(attributes_idx__name=str(rand_num))
+    print(connection.queries[-1])
+    attr_idx_name_time = connection.queries[-1]["time"]
+
+    # _ = Product.objects.filter(attributes__values__contains=[rand_num, rand_num+1]).first()
+    # list_lookup_time = connection.queries[-1]["time"]
+
+    data = {
+      'db_size': db_size,
+      'value': rand_num,
+      'name': name_lookup_time,
+      'name_idx': name_idx_lookup_time,
+      'attr_name': attr_name_time,
+      'attr_idx_name': attr_idx_name_time,
+      # 'list_lookup_time': list_lookup_time
+    }
+
+    return render(request, 'index.html', data)
