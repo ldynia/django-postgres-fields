@@ -8,7 +8,7 @@ from config.base import SEED_SIZE
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        batch_size = 10000
+        batch_size = 100000
 
         objs = (
             Product(

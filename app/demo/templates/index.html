@@ -17,7 +17,7 @@
       <thead>
         <tr>
           <th>Searched Item</th>
-          <th>Column</th>
+          <th>Column Names</th>
           <th>None Indexed</th>
           <th>Indexed</th>
         </tr>
@@ -32,14 +32,14 @@
           <tr>
             <th>{{ value }}</th>
             <th>json_field.name / json_field_idx.name</th>
-            <td>{{ attr_name }} [s]</td>
-            <td>{{ attr_idx_name }} [s]</td>
+            <td>{{ attrs_name }} [s]</td>
+            <td>{{ attrs_idx_name }} [s]</td>
           </tr>
           <tr>
             <th>{{ value }}</th>
-            <th>json_field</th>
-            <td></td>
-            <td></td>
+            <th>json_field.values / json_field_idx.values</th>
+            <td>{{ attrs_vals }} [s]</td>
+            <td>{{ attrs_idx_vals }} [s]</td>
           </tr>
         </tbody>
       </table>

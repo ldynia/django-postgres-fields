@@ -45,24 +45,30 @@ def benchmark(request):
 
     # Search for item in attributes column
     _ = Product.objects.get(attributes__name=str(rand_num))
-    attr_name_time = connection.queries[-1]["time"]
+    attrs_name_time = connection.queries[-1]["time"]
 
     # Search for item in attributes_idx column
     _ = Product.objects.get(attributes_idx__name=str(rand_num))
-    print(connection.queries[-1])
-    attr_idx_name_time = connection.queries[-1]["time"]
+    attrs_idx_name_time = connection.queries[-1]["time"]
 
-    # _ = Product.objects.filter(attributes__values__contains=[rand_num, rand_num+1]).first()
-    # list_lookup_time = connection.queries[-1]["time"]
+    # Search for list in attributes column
+    _ = Product.objects.get(attributes__values__contains=[rand_num, rand_num+1])
+    attrs_vals_time = connection.queries[-1]["time"]
+
+    # Search for list in attributes_idx column
+    _ = Product.objects.filter(attributes_idx__values__contains=[rand_num, rand_num+1])[0]
+    print(connection.queries[-1])
+    attrs_idx_vals_time = connection.queries[-1]["time"]
 
     data = {
       'db_size': db_size,
       'value': rand_num,
       'name': name_lookup_time,
       'name_idx': name_idx_lookup_time,
-      'attr_name': attr_name_time,
-      'attr_idx_name': attr_idx_name_time,
-      # 'list_lookup_time': list_lookup_time
+      'attrs_name': attrs_name_time,
+      'attrs_idx_name': attrs_idx_name_time,
+      'attrs_vals': attrs_vals_time,
+      'attrs_idx_vals': attrs_idx_vals_time
     }
 
     return render(request, 'index.html', data)

@@ -15,34 +15,32 @@ $ docker-compose up
 
 # SQL
 
-```
--- select * from demo_product where name = '1';
-select * from demo_product where attributes_idx->>'name' = '1';
-select * from demo_product where attributes_idx@>'{"name": "1"}';
+```SQL
+-- Index normal column with defualt index --
+--CREATE INDEX name_idx on demo_product(name_idx);
 
+--Create index on entire doucument. Use `@> '{"key": "val"}'` for performance gain.
+--CREATE INDEX "attributes_idx.btree-idx" ON demo_product USING BTREE(attributes_idx);
+--CREATE INDEX "attributes_idx.hash-idx" ON demo_product USING HASH(attributes_idx);
+--CREATE INDEX "attributes_idx.gin-idx" ON demo_product USING GIN((attributes_idx));
 
+--Create index on doucument's element. Use `"column" -> 'key' = '"val"';` for performance gain.
+--CREATE INDEX "attributes_idx.name.btree-idx" ON demo_product USING BTREE((attributes_idx -> 'name'));
+--CREATE INDEX "attributes_idx.name.btree-idx2" ON demo_product USING BTREE((attributes_idx ->> 'name'));
+--CREATE INDEX "attributes_idx.name.hash-idx" ON demo_product USING HASH((attributes_idx -> 'name'));
+--CREATE INDEX "attributes_idx.name.gin-idx" ON demo_product USING GIN((attributes_idx -> 'name'));
 
-TRUNCATE demo_product;
-ALTER SEQUENCE demo_product_id_seq RESTART WITH 1;
-SELECT * FROM  demo_product ORDER BY id DESC;
+-- Delete created indexes --
+--DROP INDEX IF EXISTS "attributes_idx.name.btree-idx";
+--DROP INDEX IF EXISTS "attributes_idx.name.btree-idx2";
+--DROP INDEX IF EXISTS "attributes_idx.name.hash-idx";
+--DROP INDEX IF EXISTS "attributes_idx.name.gin-idx";
 
--- Create on column
-CREATE INDEX attrs_idx_hash ON demo_product USING HASH((attributes_idx) jsonb_ops);
-CREATE INDEX attrs_idx_gin ON demo_product USING GIN((attributes_idx) jsonb_ops);
-CREATE INDEX attrs_idx_gin ON demo_product USING GIN((attributes_idx) jsonb_path_ops);
-
--- Create on key
-CREATE INDEX attrs_idx_hash ON demo_product USING HASH((attributes_idx->name) jsonb_ops);
-CREATE INDEX attrs_idx_hash ON demo_product USING HASH((attributes_idx->>name) text_ops);
-
-CREATE INDEX attrs_idx_btree ON demo_product USING BTREE((attributes_idx->name) jsonb_ops);
-CREATE INDEX attrs_idx_btree ON demo_product USING BTREE((attributes_idx->>name) text_ops);
-
-CREATE INDEX attrs_idx_gin ON demo_product USING GIN((attributes_idx->name) jsonb_ops);
-CREATE INDEX attrs_idx_gin ON demo_product USING GIN((attributes_idx->name) jsonb_path_ops);
-
--- Drop indexs
-DROP INDEX IF EXISTS exist attrs_idx_hash;
-DROP INDEX IF EXISTS attrs_idx_btree;
-DROP INDEX IF EXISTS attrs_idx_gin;
+-- For detail insights add EXPlAIN ANALYZE in front of SELECT --
+--SELECT * FROM demo_product order by id desc;
+--SELECT * FROM demo_product WHERE "attributes_idx" -> 'name' = '"1546321"';
+--SELECT * FROM demo_product WHERE "attributes_idx" ->> 'name' = '1546321';
+--SELECT * FROM demo_product WHERE "attributes_idx" @> '{"name": "1546321"}';
+--SELECT * FROM demo_product WHERE "attributes_idx" -> 'values' @> '[1356788, 1356789]';
+--SELECT * FROM "demo_product" WHERE "attributes_idx" -> 'values' @> '[1535440, 1535441]' LIMIT 1;
 ```
