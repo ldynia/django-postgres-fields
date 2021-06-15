@@ -21,16 +21,16 @@ $ docker-compose up
 
 ```SQL
 -- Index normal column with defualt index --
---CREATE INDEX name_idx on demo_product(name_idx);
+CREATE INDEX name_idx on demo_product(name_idx);
 
 --Create index on entire doucument. Use `@> '{"key": "val"}'` for performance gain.
 --CREATE INDEX "attributes_idx.btree-idx" ON demo_product USING BTREE(attributes_idx);
 --CREATE INDEX "attributes_idx.hash-idx" ON demo_product USING HASH(attributes_idx);
---CREATE INDEX "attributes_idx.gin-idx" ON demo_product USING GIN((attributes_idx));
+CREATE INDEX "attributes_idx.gin-idx" ON demo_product USING GIN((attributes_idx));
 
 --Create index on doucument's element. Use `"column" -> 'key' = '"val"';` for performance gain.
---CREATE INDEX "attributes_idx.name.btree-idx" ON demo_product USING BTREE((attributes_idx -> 'name'));
---CREATE INDEX "attributes_idx.name.btree-idx2" ON demo_product USING BTREE((attributes_idx ->> 'name'));
+CREATE INDEX "attributes_idx.name.btree-idx" ON demo_product USING BTREE((attributes_idx -> 'name'));
+CREATE INDEX "attributes_idx.name.btree-idx2" ON demo_product USING BTREE((attributes_idx ->> 'name'));
 --CREATE INDEX "attributes_idx.name.hash-idx" ON demo_product USING HASH((attributes_idx -> 'name'));
 --CREATE INDEX "attributes_idx.name.gin-idx" ON demo_product USING GIN((attributes_idx -> 'name'));
 
