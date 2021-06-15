@@ -1,6 +1,6 @@
 from pathlib import Path
 
-SEED_SIZE = 2000000
+SEED_SIZE = 10000000
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
