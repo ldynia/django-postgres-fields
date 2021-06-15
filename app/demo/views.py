@@ -57,7 +57,6 @@ def benchmark(request):
 
     # Search for list in attributes_idx column
     _ = Product.objects.filter(attributes_idx__values__contains=[rand_num, rand_num+1])[0]
-    print(connection.queries[-1])
     attrs_idx_vals_time = connection.queries[-1]["time"]
 
     data = {
