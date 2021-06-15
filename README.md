@@ -1,12 +1,16 @@
 # Description
 
-Plain django init project.
+Project for benchmarking indexing on jsonb column as well as a playground for testing JSONField in Django.
 
-# Instructions
+# Installation
+
+Clone repo and run below command.
 
 ```bash
 $ docker-compose up
 ```
+
+### Links
 
 - [Indexing JsonField in Django and PostgreSQL](https://medium.com/analytics-vidhya/indexing-jsonfield-in-django-and-postgresql-89b7571df830)
 - [django_jsonfield_index](https://github.com/abtinmo/django_jsonfield_index)
