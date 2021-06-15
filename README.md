@@ -41,8 +41,8 @@ CREATE INDEX "attributes_idx.name.btree-idx2" ON demo_product USING BTREE((attri
 --DROP INDEX IF EXISTS "attributes_idx.name.gin-idx";
 
 -- For detail insights add EXPlAIN ANALYZE in front of SELECT --
---SELECT * FROM demo_product order by id desc;
---SELECT * FROM demo_product WHERE "attributes_idx" -> 'name' = '"1546321"';
+SELECT * FROM demo_product order by id desc;
+SELECT * FROM demo_product WHERE "attributes_idx" -> 'name' = '"1546321"';
 --SELECT * FROM demo_product WHERE "attributes_idx" ->> 'name' = '1546321';
 --SELECT * FROM demo_product WHERE "attributes_idx" @> '{"name": "1546321"}';
 --SELECT * FROM demo_product WHERE "attributes_idx" -> 'values' @> '[1356788, 1356789]';
